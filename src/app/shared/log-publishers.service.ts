@@ -1,15 +1,37 @@
 ﻿import { Injectable } from '@angular/core';
-// import {HttpClient} from '@angular/common/http';
-import { Http } from '@angular/http';
-import { Observable } from 'rxjs';
+import {HttpClient} from '@angular/common/http';
+// import { Http } from '@angular/http';
+import { Observable, throwError } from 'rxjs';
 // import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/catch';
-import 'rxjs/add/observable/throw';
-import { map, catchError } from 'rxjs/operators';
+// import 'rxjs/add/operator/catch';
+// import 'rxjs/add/observable/throw';
+// import { map } from 'rxjs/operators';
+// import { catchError } from 'rxjs/operators';
 
 import { LogPublisher, LogConsole, LogLocalStorage, LogWebApi } from "./log-publishers";
 
-const PUBLISHERS_FILE = "/src/app/assets/log-publishers.json";
+// import * as PUBLISHERS_CONFIG from "./log-publishers";
+
+// *************************
+// Publisher Configuration
+// ************************
+const PUBLISHERS_CONFIG = [
+  {
+    "loggerName": "console",
+    "loggerLocation": "",
+    "isActive":  true
+  },
+  {
+    "loggerName": "localstorage",
+    "loggerLocation": "logging",
+    "isActive": true
+  },
+  {
+    "loggerName": "webapi",
+    "loggerLocation": "/api/log",
+    "isActive": false
+  }
+];
 
 // ****************************************************
 // Log Publisher Config Definition Class
@@ -23,9 +45,11 @@ class LogPublisherConfig {
 // ****************************************************
 // Logging Publishers Service Class
 // ****************************************************
-@Injectable()
+@Injectable({
+  providedIn: 'root',
+})
 export class LogPublishersService {
-  constructor(private http: Http) {
+  constructor(private http: HttpClient) {
     // Build publishers arrays
     this.buildPublishers();
   }
@@ -40,35 +64,66 @@ export class LogPublishersService {
   buildPublishers(): void {
     let logPub: LogPublisher;
 
-    this.getLoggers().subscribe(response => {
-      for (let pub of response.filter(p => p.isActive)) {
-        switch (pub.loggerName.toLowerCase()) {
-          case "console":
-            logPub = new LogConsole();
-            break;
-          case "localstorage":
-            logPub = new LogLocalStorage();
-            break;
-          case "webapi":
-            logPub = new LogWebApi(this.http);
-            break;
-        }
-        // Set location of logging
-        logPub.location = pub.loggerLocation;
-        // Add publisher to array
-        this.publishers.push(logPub);
+    // this.getLoggers().subscribe(response => {
+    //   for (let pub of response.filter(p => p.isActive)) {
+    //     switch (pub.loggerName.toLowerCase()) {
+    //       case "console":
+    //         logPub = new LogConsole();
+    //         break;
+    //       case "localstorage":
+    //         logPub = new LogLocalStorage();
+    //         break;
+    //       case "webapi":
+    //         logPub = new LogWebApi(this.http);
+    //         break;
+    //     }
+    //     // Set location of logging
+    //     logPub.location = pub.loggerLocation;
+    //     // Add publisher to array
+    //     this.publishers.push(logPub);
+    //   }
+    // });
+    const loggers = this.getLoggers().filter(p => p.isActive);
+    for (let pub of loggers) {
+      switch (pub.loggerName.toLowerCase()) {
+        case "console":
+          logPub = new LogConsole();
+          logPub.location = pub.loggerLocation;
+          this.publishers.push(logPub);
+          break;
+        case "localstorage":
+          logPub = new LogLocalStorage();
+          logPub.location = pub.loggerLocation;
+          this.publishers.push(logPub);
+          break;
+        case "webapi":
+          logPub = new LogWebApi(this.http);
+          logPub.location = pub.loggerLocation;
+          this.publishers.push(logPub);
+          break;
       }
-    });
+    }
   }
 
   // Get logger configuration info from JSON file
-  getLoggers(): Observable<LogPublisherConfig[]> {
-    return this.http.get(PUBLISHERS_FILE)
-      .pipe(
-        catchError(this.handleErrors),
-        map((response: any) => response.json())
-      );
+  // getLoggers(): Observable<LogPublisherConfig[]> {
+  //   return this.http.get<LogPublisherConfig>(PUBLISHERS_FILE)
+  //     .pipe(
+  //       map((response: any) => response.json()),
+  //       catchError(this.handleErrors)
+  //     );
+  // }
+  // Get logger configuration info from JSON file
+  getLoggers(): LogPublisherConfig[] {
+    try {
+      const loggers = PUBLISHERS_CONFIG;
+      return <LogPublisherConfig[]>loggers;
+    }
+    catch (e) {
+      throw this.handleErrors(e);
+    }
   }
+
 
   // *************************
   // Private methods
@@ -79,13 +134,14 @@ export class LogPublishersService {
 
     msg = "Status: " + error.status;
     msg += " - Status Text: " + error.statusText;
-    if (error.json()) {
-      msg += " - Exception Message: " + error.json().exceptionMessage;
+    if (error) {
+      // msg += " - Exception Message: " + error.json().exceptionMessage;
+      msg += " - Exception Message: " + error.exceptionMessage;
     }
     errors.push(msg);
 
     console.error('An error occurred', errors);
 
-    return Observable.throw(errors);
+    return throwError(errors);
   }
 }

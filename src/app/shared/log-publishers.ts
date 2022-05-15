@@ -1,7 +1,10 @@
-﻿import { Http, Headers, RequestOptions } from '@angular/http';
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/catch';
+﻿// import {Headers, RequestOptions } from '@angular/http';
+import {HttpClient} from '@angular/common/http';
+import { Observable, throwError } from 'rxjs';
+// import 'rxjs/add/operator/map';
+// import 'rxjs/add/operator/catch';
+// import { map } from 'rxjs/operators';
+import { catchError } from 'rxjs/operators';
 import 'rxjs/add/observable/throw';
 import 'rxjs/add/observable/of';
 
@@ -82,7 +85,7 @@ export class LogLocalStorage extends LogPublisher {
 // Logging Web API Class
 // ****************************************************
 export class LogWebApi extends LogPublisher {
-  constructor(private http: Http) {
+  constructor(private http: HttpClient) {
     // Must call super() from derived classes
     super();
     // Set location
@@ -95,12 +98,15 @@ export class LogWebApi extends LogPublisher {
 
   // Add log entry to back end data store
   log(entry: LogEntry): Observable<boolean> {
-    let headers = new Headers({ 'Content-Type': 'application/json' });
-    let options = new RequestOptions({ headers: headers });
+    let options = {
+      headers: { 'Content-Type': 'application/json' }
+    };
 
-    return this.http.post(this.location, entry, options)
-      .map(response => response.json())
-      .catch(this.handleErrors);
+    return this.http.post<boolean>(this.location, entry, <Object>options)
+      .pipe(
+        // map((response: any) => response.json()),
+        catchError(this.handleErrors)
+      );
   }
 
   // Clear all log entries from local storage
@@ -118,13 +124,14 @@ export class LogWebApi extends LogPublisher {
 
     msg = "Status: " + error.status;
     msg += " - Status Text: " + error.statusText;
-    if (error.json()) {
-      msg += " - Exception Message: " + error.json().exceptionMessage;
+    if (error) {
+      // msg += " - Exception Message: " + error.json().exceptionMessage;
+      msg += " - Exception Message: " + error.exceptionMessage;
     }
     errors.push(msg);
 
     console.error('An error occurred', errors);
 
-    return Observable.throw(errors);
+    return throwError(errors);
   }
 }
