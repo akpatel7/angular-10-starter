@@ -23,7 +23,7 @@ const PUBLISHERS_CONFIG = [
   {
     "loggerName": "webapi",
     "loggerLocation": "/api/log",
-    "isActive": false
+    "isActive": true
   }
 ];
 

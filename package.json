@@ -12,7 +12,7 @@
     "lint:ts": "ng lint",
     "lint:scss": "stylelint src/**/*.scss --syntax scss --fix",
     "postinstall": "patch-package --patch-dir scripts/patches",
-    "start": "ng serve",
+    "start": "ng serve --proxy-config proxy.conf.json",
     "start:build": "ws --spa index.html --directory dist --hostname localhost --port 1337",
     "test": "ng test --verbose"
   },
