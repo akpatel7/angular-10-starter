@@ -1,6 +1,6 @@
 {
   "arrowParens": "avoid",
-  "endOfLine": "lf",
+  "endOfLine": "cr",
   "printWidth": 80,
   "singleQuote": true,
   "trailingComma": "none"
