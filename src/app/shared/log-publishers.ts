@@ -1,9 +1,5 @@
-﻿// import {Headers, RequestOptions } from '@angular/http';
-import {HttpClient} from '@angular/common/http';
+﻿import {HttpClient} from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
-// import 'rxjs/add/operator/map';
-// import 'rxjs/add/operator/catch';
-// import { map } from 'rxjs/operators';
 import { catchError } from 'rxjs/operators';
 import 'rxjs/add/observable/throw';
 import 'rxjs/add/observable/of';

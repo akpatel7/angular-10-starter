@@ -1,20 +1,14 @@
 ﻿import { Injectable } from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-// import { Http } from '@angular/http';
 import { Observable, throwError } from 'rxjs';
-// import 'rxjs/add/operator/map';
-// import 'rxjs/add/operator/catch';
-// import 'rxjs/add/observable/throw';
-// import { map } from 'rxjs/operators';
-// import { catchError } from 'rxjs/operators';
 
 import { LogPublisher, LogConsole, LogLocalStorage, LogWebApi } from "./log-publishers";
-
-// import * as PUBLISHERS_CONFIG from "./log-publishers";
 
 // *************************
 // Publisher Configuration
 // ************************
+// import * as PUBLISHERS_CONFIG from "./log-publishers";
+// const PUBLISHERS_FILE = "/src/app/assets/log-publishers.json";
 const PUBLISHERS_CONFIG = [
   {
     "loggerName": "console",

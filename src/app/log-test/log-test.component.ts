@@ -12,7 +12,6 @@ export class LogTestComponent {
   }
 
   // Public Properties
-  // Public Properties
   logEntries!: LogEntry[];
 
   toggleLogging(): void {
