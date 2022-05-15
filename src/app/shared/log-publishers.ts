@@ -45,21 +45,22 @@ export class LogLocalStorage extends LogPublisher {
     super();
     // Set location
     this.location = "logging";
+    localStorage.setItem(this.location, "[]");
   }
 
   // Append log entry to local storage
   log(entry: LogEntry): Observable<boolean> {
     let ret: boolean = false;
-    let values: LogEntry[];
+    // let values: LogEntry[];
 
     try {
       // Retrieve previous values from local storage
-      values = JSON.parse(localStorage.getItem(this.location) || '') || [];
+      let storageValues = localStorage.getItem(this.location);
+      let values = storageValues ? JSON.parse(storageValues) : [];
       // Add new log entry to array
       values.push(entry);
       // Store array into local storage
       localStorage.setItem(this.location, JSON.stringify(values));
-
       // Set return value
       ret = true;
     } catch (ex) {
