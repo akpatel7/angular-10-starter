@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
-import { HttpRequestInterceptor } from './shared/interceptors/http-request.interceptor';
+import { HttpRequestInterceptor } from './http-request.interceptor';
 
 
 @NgModule({
