@@ -1,6 +1,6 @@
 ﻿import { Component } from "@angular/core";
 
-import { LogService, LogLevel, LogEntry } from '../shared/log.service';
+import { LogService, LogLevel, LogEntry } from '../../shared/services/log/log.service';
 import { Product } from './product';
 
 @Component({

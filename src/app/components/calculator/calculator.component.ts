@@ -4,6 +4,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 /* eslint-disable @typescript-eslint/no-empty-function */
 import { Component, OnInit } from '@angular/core';
+import { NGXLogger } from 'ngx-logger';
 
 @Component({
   selector: 'app-calculator',
@@ -16,7 +17,11 @@ export class CalculatorComponent implements OnInit {
   operator: any = null;
   waitForSecondNumber = false;
 
-  constructor() {}
+  constructor(private logger: NGXLogger) {
+      this.logger.debug('Your log message goes here');
+      this.logger.debug('Multiple', 'Argument', 'support');
+      // this.logger.updateConfig({ level: NgxLoggerLevel.ERROR })
+  }
 
   // eslint-disable-next-line @angular-eslint/no-empty-lifecycle-method
   ngOnInit(): void {}
