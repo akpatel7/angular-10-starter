@@ -86,7 +86,7 @@ export class LogWebApi extends LogPublisher {
     // Must call super() from derived classes
     super();
     // Set location
-    this.location = "/api/logging";
+    this.location = "/api/log";
   }
 
   // **************
