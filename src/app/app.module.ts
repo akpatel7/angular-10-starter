@@ -17,8 +17,17 @@ import { LogTestComponent } from './components/log-test/log-test.component';
 
 @NgModule({
   declarations: [AppComponent, CalculatorComponent, LogTestComponent],
-  imports: [LoggerModule.forRoot({serverLoggingUrl: '/api/log', level: NgxLoggerLevel.DEBUG, serverLogLevel: NgxLoggerLevel.ERROR}),
-    BrowserModule, FormsModule, HttpClientModule, HttpInterceptorModule],
+  imports: [
+    BrowserModule,
+    FormsModule,
+    HttpClientModule,
+    HttpInterceptorModule,
+    LoggerModule.forRoot({
+      serverLoggingUrl: '/api/logs',
+      level: NgxLoggerLevel.DEBUG,
+      serverLogLevel: NgxLoggerLevel.ERROR
+    }),
+  ],
   providers: [
     LogService,
     LogPublishersService,
