@@ -9,7 +9,7 @@ export class LoggingInterceptor implements HttpInterceptor {
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
     this.logger.debug(request);
-    this.logger.error('Any message can be logged');
+    // this.logger.error('Any message can be logged');
     return next.handle(request);
   }
 }

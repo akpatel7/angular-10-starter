@@ -23,7 +23,8 @@ import { LogTestComponent } from './components/log-test/log-test.component';
   providers: [
     LogService,
     LogPublishersService,
-    {provide: ErrorHandler, useClass: CustomErrorHandlerService}
+    {provide: ErrorHandler, useClass: CustomErrorHandlerService},
+    { provide: Window, useValue: window }
   ],
   bootstrap: [AppComponent]
 })
