@@ -11,6 +11,7 @@ import { NGXLogger } from 'ngx-logger';
   templateUrl: './calculator.component.html',
   styleUrls: ['./calculator.component.scss']
 })
+
 export class CalculatorComponent implements OnInit {
   currentNumber = '0';
   firstOperand: any = null;
@@ -83,5 +84,6 @@ export class CalculatorComponent implements OnInit {
     this.firstOperand = null;
     this.operator = null;
     this.waitForSecondNumber = false;
+    throw new Error('DUMMY Error executed');
   }
 }
