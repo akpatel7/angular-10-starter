@@ -1,7 +1,8 @@
+import { HttpModule } from '@angular/http';
+import { HttpClientModule } from '@angular/common/http';
 import { ErrorHandler, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
-import {HttpClientModule} from '@angular/common/http';
 
 
 import { AppComponent } from './app.component';
@@ -18,7 +19,7 @@ import { LogTestComponent } from './components/log-test/log-test.component';
 @NgModule({
   declarations: [AppComponent, CalculatorComponent, LogTestComponent],
   imports: [LoggerModule.forRoot({serverLoggingUrl: '/api/log', level: NgxLoggerLevel.DEBUG, serverLogLevel: NgxLoggerLevel.ERROR}),
-    BrowserModule, FormsModule, HttpClientModule, HttpInterceptorModule],
+    BrowserModule, FormsModule, HttpModule, HttpClientModule, HttpInterceptorModule],
   providers: [
     LogService,
     LogPublishersService,

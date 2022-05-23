@@ -1,12 +1,12 @@
 import {ErrorHandler, Injectable} from '@angular/core';
-// import { NGXLogger } from 'ngx-logger';
-import { LogService } from '../../../shared/services/log/log.service';
+import { NGXLogger } from 'ngx-logger';
+// import { LogService } from '../../../shared/services/log/log.service';
 import * as StackTrace from 'stacktrace-js';
 
 @Injectable()
 export class CustomErrorHandlerService extends ErrorHandler {
 
-    constructor(private logger: LogService) {
+    constructor(private logger: NGXLogger) {
         super();
     }
 
@@ -17,25 +17,37 @@ export class CustomErrorHandlerService extends ErrorHandler {
         error = new Error(message);
       }
 
-      StackTrace.fromError(error).then((stackframes) => {
-        const stackString = stackframes
-          .splice(0, 10)
-          .map(function(sf) {
-            return sf.toString();
-          })
-          .toString();
+      // StackTrace.fromError(error).then((stackframes) => {
+      //   const stackString = stackframes
+      //     .splice(0, 10)
+      //     .map(function(sf) {
+      //       return sf.toString();
+      //     })
+      //     .toString();
 
-      const errorTraceStr = `Error message: ${message}. Stack trace: ${stackString}`;
 
-      this.logger.error(errorTraceStr);
+      StackTrace.get().then((stack) => {
+        const stackString = stack;
+          // .splice(0, 10)
+          // .map(function(sf) {
+          //   return sf.toString();
+          // })
+          // .toString();
 
-      // throw error;
+        // const errorTraceStr = `Error message: ${message}. Stack trace: ${stackString}`;
+
+        const errorTrace = {
+          message,
+          stack: stackString
+        };
+        console.log('errTrace:******************************');
+        console.log(errorTrace);
+        console.log('errorTraceend**************************')
+        this.logger.error(errorTrace);
+        // throw error;
       });
-
-      super.handleError(error);
-
       // Here you can provide whatever logging you want
       // this.logger.error(error);
-      // super.handleError(error);
+      super.handleError(error);
     }
 }
