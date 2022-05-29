@@ -34,28 +34,18 @@ export class CustomErrorHandlerService extends ErrorHandler {
           // client-side error
           await StackTrace.fromError(error).then((stackframes) => {
             stackFrameDetail = [];
-            for(let sf of stackframes) {
-              const {
-                functionName,
-                args,
-                fileName,
-                lineNumber,
-                columnNumber,
-                source,
-                isEval,
-                isNative
-              } = sf;
+            stackframes.forEach(sf => {
               stackFrameDetail.push({
-                  functionName,
-                  args,
-                  fileName,
-                  lineNumber,
-                  columnNumber,
-                  source,
-                  isEval,
-                  isNative
-                });
-            }
+                name: sf.functionName,
+                args: sf.args,
+                fileName: sf.fileName,
+                line: sf.lineNumber,
+                column: sf.columnNumber,
+                source: sf.source,
+                isEval: sf.isEval,
+                isNative: sf.isNative
+              });
+            });
           });
           reportObject = {
             name: error.name,
