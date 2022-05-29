@@ -3,6 +3,19 @@ import * as StackTrace from 'stacktrace-js';
 import { NGXLogger } from 'ngx-logger';
 // import { LogService } from '../../../shared/services/log/log.service';
 
+
+/*
+export enum NgxLoggerLevel {
+  TRACE = 0,
+  DEBUG = 1,
+  INFO = 2,
+  LOG = 3,
+  WARN = 4,
+  ERROR = 5,
+  FATAL = 6,
+  OFF = 7
+}
+*/
 @Injectable()
 export class CustomErrorHandlerService extends ErrorHandler {
 
@@ -11,7 +24,7 @@ export class CustomErrorHandlerService extends ErrorHandler {
     }
 
     public async handleError(error: any) {
-      let errorMessage = '', stackFrameDetail, reportObject;
+      let reportObject, errorMessage = '';
 
       errorMessage = error?.error?.message ? error?.message : error?.toString() || '';
 
@@ -31,26 +44,35 @@ export class CustomErrorHandlerService extends ErrorHandler {
         }
         else
         {
+          const stackFrameDetail: any[] = [];
           // client-side error
-          await StackTrace.fromError(error).then((stackframes) => {
-            stackFrameDetail = [];
-            stackframes.forEach(sf => {
-              stackFrameDetail.push({
-                name: sf.functionName,
-                args: sf.args,
-                fileName: sf.fileName,
-                line: sf.lineNumber,
-                column: sf.columnNumber,
-                source: sf.source,
-                isEval: sf.isEval,
-                isNative: sf.isNative
+          if (error.stack) {
+            try {
+              await StackTrace.fromError(error).then((stackframes) => {
+                stackframes.forEach(sf => {
+                  stackFrameDetail.push({
+                    name: sf.functionName,
+                    args: sf.args,
+                    fileName: sf.fileName,
+                    line: sf.lineNumber,
+                    column: sf.columnNumber,
+                    source: sf.source,
+                    isEval: sf.isEval,
+                    isNative: sf.isNative
+                  });
+                });
               });
-            });
-          });
+              error.stack = stackFrameDetail.length > 0 ? stackFrameDetail : error.stack;
+            }
+            catch (err) {
+              console.error(err);
+            }
+          }
+
           reportObject = {
             name: error.name,
             message: errorMessage || error.message,
-            stack: stackFrameDetail, // || error.stack,
+            stack: stackFrameDetail.length > 0 ? stackFrameDetail : error.stack,
             url: 'location.href',
             route: 'router.url',
           };
